@@ -1,148 +1,80 @@
-PUT /demo3-info7255/
-{
-  "mappings" : {
-    "properties" : {
-      "objectId" : {
-        "type" : "keyword"
-      },
-      "plan_join" : {
-        "type" : "join",
-        "relations" : {
-          "linkedPlanServices" : ["linkedService","planserviceCostShares"],
-          "plan" : ["planCostShares", "linkedPlanServices"]
-        }
-        }
-      }
-  }
-}
+<h1><centre>Project HealthSecure Hub</h1></centre>
+<h2>About</h2>
+This project develops a robust health insurance plan management system designed to streamline operations and enhance security across the digital landscape of healthcare services. Key features and technologies include:
+<ul>
+<li>Efficient Data Handling: Utilizes RabbitMQ for robust message queuing and Redis for high-speed data caching, ensuring rapid response times and scalability.</li>
+<li>Advanced Security: Implements OAuth2 with RS256 for secure authentication and token validation, greatly enhancing system security and protecting sensitive health data.</li>
+<li>Operational Insights: Employs Kibana for real-time visualization and monitoring of Elasticsearch data, providing deep operational insights and aiding in proactive management.</li>
+<li>Sophisticated API Features: Features an API with advanced RESTful semantics, including conditional read and write operations, which optimize network and storage resources while ensuring data consistency and reliability.</li>
+<li>This platform is tailored to meet the complex demands of health insurance providers, offering them a scalable solution to manage, analyze, and secure large volumes of sensitive data effectively.</li>
+</ul>
 
-GET /demo3-info7255/_search
-{
-  "query": {
-    "match_all": {}
-  }
-}
+<br><br>
 
-#has_child
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_child": {
-      "type": "planserviceCostShares",
-      "query": {
-        "range": {
-          "copay": {
-            "gte": 1
-          }
-        }
-      }
-    }
-  }
-}
+<h2>🌟 Technologies To Be Used</h2>
+<ul>
+ <li>Reddis</li>
+ <li>Elastic Search</li>
+ <li>Kibana</li>
+ <li>RabbitMQ</li>
+ <li>OAuth2 with RS256</li>   
+ <li>Docker</li>
+ <li>Google Cloud Platform for token</li>
+ <li>Postman for hitting REST APIs</li>
+</ul>
+<br><br>
 
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_child": {
-      "type": "planservice",
-      "query": {
-        "has_child": {
-          "type": "service",
-          "query": {
-            "match": {
-              "objectId": "1234520xvc30asdf-502"
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_child": {
-      "type": "linkedPlanServices",
-      "query": {
-        "match_all": {}
-      }
-    }
-  }
-}
-
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_parent": {
-      "parent_type": "planservice",
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "match": {
-                "objectId": "27283xvx9asdff-504"
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
-}
-
-#has parent
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_parent": {
-      "parent_type": "plan",
-      "query": {
-        "match_all": {}
-      }
-    }
-  }
-}
+## Requirements
 
 
-#has parent
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_parent": {
-      "parent_type": "linkedPlanServices",
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "match": {
-                "objectId": "27283xvx9asdff-501"
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
-}
+- Git
+- CLI (only for write access)
 
-#has parent
-GET /demo3-info7255/_search
-{
-  "query": {
-    "has_parent": {
-      "parent_type": "planCostShares",
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "match": {
-                "objectId": "27283xvx9asdff-501"
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
-}
+
+## Redis Installations
+
+```bash
+redis-server
+brew services start redis
+brew services info redis
+brew services stop redis
+redis-cli
+```
+
+## RabbitMQ
+
+Ref: https://dev.to/pharzad/introduction-to-rabbitmq-for-node-js-developers-1clm
+
+## Docker
+
+To delete all containers including its volumes use,
+
+```bash
+docker rm -vf $(docker ps -aq)
+```
+
+To delete all the images,
+
+```bash
+docker rmi -f $(docker images -aq)
+```
+
+To start build
+
+```bash
+docker-compose up
+```
+
+## Status
+
+Docker status
+
+```bash
+http://localhost:9200/
+```
+
+Elasticsearch console
+
+```bash
+http://localhost:5601/app/dev_tools#/console
+```
