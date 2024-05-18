@@ -1,0 +1,482 @@
+GET _cat/indices
+
+DELETE /demo3-info7255
+
+POST /demo3-info7255/_cache/clear
+
+GET /demo3-info7255/_mapping
+
+PUT /demo3-info7255
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {
+    "properties": {
+      "_org": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "copay": {
+        "type": "integer"
+      },
+      "creationDate": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "deductible": {
+        "type": "integer"
+      },
+      "linkedPlanServices": {
+        "properties": {
+          "_org": {
+            "type": "text"
+          },
+          "objectId": {
+            "type": "keyword"
+          },
+          "objectType": {
+            "type": "text"
+          }
+        }
+      },
+      "linkedService": {
+        "properties": {
+          "_org": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "objectId": {
+            "type": "keyword"
+          },
+          "objectType": {
+            "type": "text"
+          }
+        }
+      },
+      "name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "objectId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "objectType": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "plan": {
+        "properties": {
+          "_org": {
+            "type": "text"
+          },
+          "creationDate": {
+            "type": "date",
+            "format": "MM-dd-yyyy"
+          },
+          "objectId": {
+            "type": "keyword"
+          },
+          "objectType": {
+            "type": "text"
+          },
+          "planType": {
+            "type": "text"
+          }
+        }
+      },
+      "planCostShares": {
+        "properties": {
+          "_org": {
+            "type": "text"
+          },
+          "copay": {
+            "type": "integer"
+          },
+          "deductible": {
+            "type": "integer"
+          },
+          "objectId": {
+            "type": "keyword"
+          },
+          "objectType": {
+            "type": "text"
+          }
+        }
+      },
+      "planType": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "plan_join": {
+        "type": "join",
+        "eager_global_ordinals": true,
+        "relations": {
+          "linkedPlanServices": [
+            "linkedService",
+            "planserviceCostShares"
+          ],
+          "plan": [
+            "planCostShares",
+            "linkedPlanServices"
+          ]
+        }
+      },
+      "planserviceCostShares": {
+        "properties": {
+          "_org": {
+            "type": "text"
+          },
+          "copay": {
+            "type": "integer"
+          },
+          "deductible": {
+            "type": "integer"
+          },
+          "objectId": {
+            "type": "keyword"
+          },
+          "objectType": {
+            "type": "text"
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "match": {
+      "_id": "12xvxc345ssdsds-508"
+    }
+  }
+}
+
+#has parent
+GET /demo3-info7255/_search
+{
+  "query" : {
+    "has_parent" : {
+      "parent_type" : "plan",
+      "query" : {
+         "match_all" : {}
+       }
+     }
+   }
+ }
+
+#has_child
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_child": {
+      "type": "planserviceCostShares",
+      "query": {
+        "range": {
+          "copay": {
+            "gte": 1
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_child": {
+      "type": "linkedPlanServices",
+      "query": {
+        "match_all": {}
+      }
+    }
+  }
+}
+
+#has parent
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_parent": {
+      "parent_type": "linkedPlanServices",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "objectId": "27283xvx9asdff-504"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+#has parent
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_parent": {
+      "parent_type": "plan",
+      "query": {
+        "match_all": {}
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_parent": {
+      "parent_type": "planservice",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "objectId": "27283xvx9asdff-504"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "wildcard": {
+      "_org": {
+        "value": "example*"
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "wildcard": {
+      "name": {
+        "value": "well*"
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "copay": 175
+              }
+            },
+            {
+              "match": {
+                "deductible": 10
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "copay": 0
+              }
+            },
+            {
+              "match": {
+                "deductible": 10
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "_org": "example.com"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "name": "well baby"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_child": {
+      "type": "membercostshare",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "objectId": "1234vxc2324sdf-501"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_child": {
+      "type": "membercostshare_copy",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "deductible": 1010
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_child": {
+      "type": "planservice",
+      "query": {
+        "has_child": {
+          "type": "service",
+          "query": {
+            "match": {
+              "objectId": "1234520xvc30sfs-505"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /demo3-info7255/_search
+{
+  "query": {
+    "has_child": {
+      "type": "planservice",
+      "query": {
+        "has_child": {
+          "type": "service",
+          "query": {
+            "match": {
+              "objectId": "1234520xvc30asdf-502"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+

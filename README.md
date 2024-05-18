@@ -1,4 +1,4 @@
-<h1><centre>Project HealthSecure Hub</h1></centre>
+<h1><centre>Project Health Plan Pro</h1></centre>
 <h2>About</h2>
 This project develops a robust health insurance plan management system designed to streamline operations and enhance security across the digital landscape of healthcare services. Key features and technologies include:
 <ul>
